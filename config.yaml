@@ -1,0 +1,18 @@
+# This is the letters, numbers and/or symbols you type to declare a command.
+# Default is mc!.
+# Example: mc!start. The prefix is mc! and the command is start.
+prefix: "mc!"
+
+# Change this to the IP address of the Minecraft server.
+ip: ""
+
+# Change this to the directory of the server.jar file
+# Example: C:/User/Ethan/MinecraftServer/server.jar
+serverdir: ""
+
+# Set this to true of false depending on whether you are using playit.gg to run your server
+playit: "false"
+
+# Add your Discord Bot token.
+# To get a token follow the first section of this tutorial: https://discord.com/developers/docs/quick-start/getting-started and
+token: ""
