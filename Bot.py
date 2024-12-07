@@ -62,7 +62,7 @@ async def start(ctx):
                 checking = False
 
 # A command to stop the Minecraft server
-#
+# If the server is not online it will inform the user
 @bot.command()
 async def stop(ctx):
     online = serverping()
