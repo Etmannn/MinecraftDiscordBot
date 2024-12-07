@@ -7,7 +7,7 @@ prefix: "mc!"
 ip: ""
 
 # Change this to the directory of the start.bat file
-# Example: C:/User/Ethan/MinecraftServer/start.bat
+# Example: C:/User/Steve/server/start.bat
 serverdir: ""
 
 # Set this to true of false depending on whether you are using playit.gg to run your server
