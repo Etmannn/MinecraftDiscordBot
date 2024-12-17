@@ -28,5 +28,5 @@ help: '@everyone'
 playit: "false"
 
 # Add your Discord Bot token.
-# To get a token follow the first part of this tutorial:https://discord.com/developers/docs/quick-start/getting-started.
+# To get a token follow this tutorial: https://youtu.be/XrH8cKOhAdM
 token: ""
