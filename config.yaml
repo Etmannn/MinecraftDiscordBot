@@ -3,12 +3,21 @@
 # Example: mc!start. The prefix is mc! and the command is start.
 prefix: "mc!"
 
-# Change this to the IP address of the Minecraft server.
-ip: ""
+# Change this to the port of the Minecraft server
+# Minecraft default is 25565, although it is recommended to change this if port forwarding
+port: "25565"
 
-# Change this to the directory of the start.bat file.
-# Example: C:/User/Steve/server/start.bat.
-serverdir: ""
+# Change this to the name of the start.bat file
+# Example: startserver.bat
+startbat: "start.bat"
+
+# Set this to true or false depending on whether you want the server to turn off automatically.
+# default is true
+autostop: "true"
+
+# In seconds how long it takes autostop to turn off the server after detecting no players online.
+# default is 300
+time: 300
 
 # Change this to the channel ID where you want the bot messages to be sent.
 # To find the channel ID of the selected channel you first need to enable developer mode on discord which can be found,
@@ -24,9 +33,10 @@ stop: '@everyone'
 restart: '@everyone'
 help: '@everyone'
 
-# Set this to true of false depending on whether you are using playit.gg to run your server
+# Set this to true or false depending on whether you are using playit.gg to run your server
+# default is false
 playit: "false"
 
 # Add your Discord Bot token.
-# To get a token follow this tutorial: https://youtu.be/XrH8cKOhAdM
+# To get a token follow this tutorial: https://youtu.be/ic5GuP-uHcg
 token: ""
