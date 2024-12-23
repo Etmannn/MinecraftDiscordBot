@@ -2,17 +2,18 @@
 # Packages used in program
 
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import subprocess
 from mcstatus import JavaServer
 import yaml
+import asyncio
 
 # Open and read config file
 with open('config.yaml', 'r') as f:
     config = yaml.safe_load(f)
 
 # constants
-server = JavaServer.lookup(config['ip'])
+server = JavaServer.lookup(f"127.0.0.1:{config['port']}")
 
 # Set discord bot intents
 intents = discord.Intents.default()
@@ -29,18 +30,27 @@ def serverping():
     else:
         return True
 
+@tasks.loop(seconds=1)
+async def auto_stop():
+    online = serverping()
+    if online == True and server.status().players.online == 0:
+        await asyncio.sleep(30)
+        if online == True and server.status().players.online == 0:
+            subprocess.call("TASKKILL /F /IM java.exe")
+            if config['playit'] == 'true':
+                subprocess.call("TASKKILL /F /IM playit.exe")
+
 # Prints a message and sets activitiy to the help command; triggers when the bot is online
 @bot.event
 async def on_ready():
     await bot.change_presence(
         activity=discord.Activity(type=discord.ActivityType.listening, name=f"{config['prefix']}help")
     )
-
     global channel
     channel = bot.get_channel(config['channel'])
-
     await channel.send("Bot Successfully Logged on!")
-
+    print("Bot successfully logged on!")
+    auto_stop.start()
 
 # A command to check if the server is online
 @bot.command()
@@ -61,8 +71,11 @@ async def start(ctx):
     if online is True:
         await channel.send("Server already Online")
     else:
-        await channel.send("Server is starting!")
-        subprocess.Popen(config['serverdir'])
+        await ctx.send("Server is starting!")
+        subprocess.Popen(f"start cmd.exe /c {config['startbat']}", shell=True)
+        if config['playit'] == 'true':
+            subprocess.call("TASKKILL /F /IM playit.exe")
+            subprocess.Popen('start cmd.exe /c playit.exe', shell=True)
         checking = True
         while checking is True:
             checkstat = serverping()
@@ -77,9 +90,9 @@ async def start(ctx):
 async def stop(ctx):
     online = serverping()
     if online is True:
-        subprocess.call("TASKKILL /F /IM java.exe", shell=True)
+        subprocess.call("TASKKILL /F /IM java.exe")
         if config['playit'] == 'true':
-            subprocess.call("TASKKILL /F /IM playit.exe", shell=True)
+            subprocess.call("TASKKILL /F /IM playit.exe")
         await channel.send("Server Offline")
     else:
         await channel.send("Sever already Offline")
@@ -102,17 +115,17 @@ async def restart(ctx):
 async def help(ctx):
     helpembed = discord.Embed(title="Commands", color=0x55FF55)
 
-    helpembed.add_field(name="mc!ping", value="Checks Server Status", inline=False)
+    helpembed.add_field(name=f"{config['prefix']}ping", value="Checks Server Status", inline=False)
     helpembed.add_field(
-        name="mc!start", value="Starts the minecraft server", inline=False
+        name=f"{config['prefix']}start", value="Starts the Terraria server", inline=False
     )
     helpembed.add_field(
-        name="mc!stop", value="Stops the minecraft server", inline=False
+        name=f"{config['prefix']}stop", value="Stops the Terraria server", inline=False
     )
     helpembed.add_field(
-        name="mc!restart", value="Restarts the minecraft server", inline=False
+        name=f"{config['prefix']}restart", value="Restarts the Terraria server", inline=False
     )
-    await channel.send(embed=helpembed)
+    await ctx.send(embed=helpembed)
 
 # Runs the bot using the bot token
 bot.run(config['token'])
