@@ -1,7 +1,5 @@
-           # This is the letters, numbers and/or symbols you type to declare a command.
-# Default is mc!.
-# Example: mc!start. The prefix is mc! and the command is start.
-prefix: "mc!"
+# Leave this alone as it has been replaced with slash commands.
+prefix: "/"
 
 # Change this to the query port of the Minecraft server.
 # This is different to the regular port of the server.
