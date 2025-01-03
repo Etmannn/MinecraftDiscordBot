@@ -1,4 +1,4 @@
-# This is the letters, numbers and/or symbols you type to declare a command.
+           # This is the letters, numbers and/or symbols you type to declare a command.
 # Default is mc!.
 # Example: mc!start. The prefix is mc! and the command is start.
 prefix: "mc!"
