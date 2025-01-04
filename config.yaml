@@ -1,6 +1,3 @@
-# Leave this alone as it has been replaced with slash commands.
-prefix: "/"
-
 # Change this to the query port of the Minecraft server.
 # This is different to the regular port of the server.
 # Default is 25565

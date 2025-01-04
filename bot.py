@@ -17,7 +17,7 @@ server = JavaServer.lookup(f"127.0.0.1:{config['port']}")
 # Set discord bot intents
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix=config['prefix'], intents=intents)
+bot = commands.Bot(command_prefix='/', intents=intents)
 bot.remove_command("help")
 
 # Pings server to check if its online
@@ -43,7 +43,7 @@ async def auto_stop():
 @bot.event
 async def on_ready():
     await bot.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.listening, name=f"{config['prefix']}help")
+        activity=discord.Activity(type=discord.ActivityType.listening, name="/help")
     )
     await bot.tree.sync()
     channel = bot.get_channel(config['channel'])
@@ -52,9 +52,9 @@ async def on_ready():
     auto_stop.start()
 
 # A command to check if the server is online
-@bot.tree.command(name="ping")
+@bot.tree.command(name="ping", description="Checks Server Status")
 async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message(f"Checking...")
+    await interaction.response.send_message("Checking...")
     online = serverping()
     if online is True:
         await interaction.followup.send(f"Server is Online! There are currently {server.status().players.online} players online.")
@@ -63,7 +63,7 @@ async def ping(interaction: discord.Interaction):
 
 # A command to start the Minecraft server
 # If the server is already online it will inform the user
-@bot.tree.command(name="start")
+@bot.tree.command(name="start", description="Starts the Minecraft server")
 async def start(interaction: discord.Interaction):
     online = serverping()
     if online is True:
@@ -83,7 +83,7 @@ async def start(interaction: discord.Interaction):
 
 # A command to stop the Minecraft server
 # If the server is not online it will inform the user
-@bot.tree.command(name="stop")
+@bot.tree.command(name="stop", description="Stops the Minecraft server")
 async def stop(interaction: discord.Interaction):
     online = serverping()
     if online is True:
@@ -95,15 +95,28 @@ async def stop(interaction: discord.Interaction):
         await interaction.response.send_message("Sever already Offline")
 
 # A command to restart the Minecraft server
-@bot.tree.command(name="restart")
+@bot.tree.command(name="restart", description="Restarts the Minecraft server")
 async def restart(interaction: discord.Interaction):
     online = serverping()
     if online is True:
-        stop = bot.tree.get_command("stop")
-        await stop(interaction)
+        await interaction.response.send_message("Server Restarting...")
+        await asyncio.create_subprocess_shell("TASKKILL /F /IM java.exe")
+        if config['playit'] == 'true':
+            await asyncio.create_subprocess_shell("TASKKILL /F /IM playit.exe")
+        await interaction.followup.send("Server Offline")
 
-        start = bot.tree.get_command("start")
-        await start(interaction)
+        await interaction.followup.send("Server is starting!")
+        await asyncio.create_subprocess_shell(f"start cmd.exe /c {config['startbat']}", shell=True)
+        if config['playit'] == 'true':
+            await asyncio.create_subprocess_shell("TASKKILL /F /IM playit.exe")
+            await asyncio.create_subprocess_shell('start cmd.exe /c playit.exe', shell=True)
+        checking = True
+        while checking is True:
+            checkstat = serverping()
+            if checkstat is True:
+                await interaction.followup.send(
+                    f"Server Online! The server will automatically stop in {config['time']} seconds.")
+                checking = False
     else:
         await interaction.response.send_message("Server Offline")
 
@@ -113,15 +126,15 @@ async def restart(interaction: discord.Interaction):
 async def help(interaction: discord.Interaction):
     helpembed = discord.Embed(title="Commands", color=0x55FF55)
 
-    helpembed.add_field(name=f"{config['prefix']}ping", value="Checks Server Status", inline=False)
+    helpembed.add_field(name="/ping", value="Checks Server Status", inline=False)
     helpembed.add_field(
-        name=f"{config['prefix']}start", value="Starts the Terraria server", inline=False
+        name="/start", value="Starts the Minecraft server", inline=False
     )
     helpembed.add_field(
-        name=f"{config['prefix']}stop", value="Stops the Terraria server", inline=False
+        name="/stop", value="Stops the Minecraft server", inline=False
     )
     helpembed.add_field(
-        name=f"{config['prefix']}restart", value="Restarts the Terraria server", inline=False
+        name="/restart", value="Restarts the Minecraft server", inline=False
     )
     await interaction.response.send_message(embed=helpembed)
 
