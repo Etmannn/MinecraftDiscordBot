@@ -15,19 +15,10 @@ autostop: "true"
 # Default is 300.
 time: 300
 
-# Change this to the channel ID where you want the bot messages to be sent.
+# Change this to the channel ID where you want the bot start message to be sent.
 # To find the channel ID of the selected channel you first need to enable developer mode on discord which can be found,
 # under the advanced tab in settings. Then you want to right-click on the channel and press 'Copy Channel ID'.
 channel: 1234567890
-
-# Command Permissions.
-# Change to the name of the role that you want to be able to use the bots commands. It is defaulted as @everyone.
-# Example: Admin.
-ping: '@everyone'
-start: '@everyone'
-stop: '@everyone'
-restart: '@everyone'
-help: '@everyone'
 
 # Set this to true or false depending on whether you are using playit.gg to run your server.
 # Default is false.
